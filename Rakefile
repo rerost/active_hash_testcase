@@ -46,11 +46,12 @@ desc "APIレスポンスもどき"
 task show_all: :environment do
   puts Benchmark::CAPTION
   puts Benchmark.measure {
+    preloaded = Chip.all.to_a.group_by(&:question_id)
     Question.all.map do |question|
       {
         id: question.id,
         text: question.text,
-        chips: question.chips.map do |chip|
+        chips: preloaded[question.id].map do |chip|
           {
             id: chip.id,
             test: chip.text,
