@@ -41,3 +41,22 @@ task generate_sample_yaml: :environment do
 
   File.open("chips.yml", "w") { |file| file.write(chips.to_yaml) }
 end
+
+desc "APIレスポンスもどき"
+task show_all: :environment do
+  puts Benchmark::CAPTION
+  puts Benchmark.measure {
+    Question.all.map do |question|
+      {
+        id: question.id,
+        text: question.text,
+        chips: question.chips.map do |chip|
+          {
+            id: chip.id,
+            test: chip.text,
+          }
+        end
+      }
+    end
+  }
+end
