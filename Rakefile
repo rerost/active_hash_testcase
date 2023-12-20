@@ -16,7 +16,7 @@ task generate_sample_yaml: :environment do
   # chips.ymlは
   # * id 1からの数字。連番
   # * text 質問文。chip_<id>の形式
-  # * questions_id はquestions.ymlのid
+  # * question_id はquestions.ymlのid
   #
   # を生成してください。
   #
@@ -25,24 +25,19 @@ task generate_sample_yaml: :environment do
 
   require 'yaml'
 
-  # Generating questions.yml
-  questions = []
-  (1..500).each do |id|
-    questions << { 'id' => id, 'text' => "text_#{id}" }
+  # Generate questions.yml
+  questions = (1..500).map do |id|
+    { 'id' => id, 'text' => "text_#{id}" }
   end
 
-  File.open("questions.yml", "w") do |file|
-    file.write(questions.to_yaml)
-  end
+  File.open("questions.yml", "w") { |file| file.write(questions.to_yaml) }
 
-  # Generating chips.yml
+  # Generate chips.yml
   chips = []
   (1..4000).each do |id|
-    question_id = (id - 1) / 8 + 1  # 8 chips per question
-    chips << { 'id' => id, 'text' => "chip_#{id}", 'questions_id' => question_id }
+    question_id = ((id - 1) / 8) + 1  # 8 chips per question
+    chips << { 'id' => id, 'text' => "chip_#{id}", 'question_id' => question_id }
   end
 
-  File.open("chips.yml", "w") do |file|
-    file.write(chips.to_yaml)
-  end
+  File.open("chips.yml", "w") { |file| file.write(chips.to_yaml) }
 end
